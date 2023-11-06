@@ -37,7 +37,7 @@ public class Hex<T>
 
     private static float CalculateDiagonal(float q, float r)
     {
-        return q + (r * 0.52f);
+        return q + (r * 0.5f);
     }
 
     public static Hex<float> HexAdd(Hex<float> a, Hex<float> b)

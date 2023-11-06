@@ -8,8 +8,8 @@ public class HexManager : MonoBehaviour
 {
     public int hexRange;
 
-    private float XOffSet;
-    private const float ZOffSet = 0.9f;
+    private const float XOffSet = 1.02f;
+    private const float ZOffSet = 0.88f;
 
     private List<Hex<float>> hexes = new List<Hex<float>>();
     public GameObject hexObject;
@@ -20,9 +20,9 @@ public class HexManager : MonoBehaviour
 
         foreach (Hex<float> hex in hexes)
         {
-            Vector3 position = new Vector3(hex.Q, 0, 0) +
-                               new Vector3(0, 0, hex.R) * ZOffSet +
-                               (Vector3.right * (XOffSet += 0.002f)) + Vector3.zero;
+            Vector3 position = new Vector3(hex.Q, 0, 0) * XOffSet +
+                               new Vector3(0, 0, hex.R) * ZOffSet + 
+                               Vector3.zero;
 
             Instantiate(hexObject, position, Quaternion.identity);
         }
