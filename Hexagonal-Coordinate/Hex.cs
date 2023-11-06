@@ -15,74 +15,33 @@ public class Hex<T>
         R = r;
     }
 
-    public static Hex<float> HexDirection(List<Hex<float>> hexes, int direction)
-    {
-        if (direction >= 0 && direction < hexes.Count)
-        {
-            return hexes[direction];
-        }
-        else
-        {
-            throw new ArgumentOutOfRangeException("direction", "Invalid direction value");
-        }
-    }
-
     public static List<Hex<float>> GenerateHexagons(Hex<float> center, int range)
     {
         List<Hex<float>> results = new List<Hex<float>>();
 
-        // Define constants for better clarity
-        float sqrt3 = (float)Math.Sqrt(3);
-        float hexSize = 0.6f;
-
-        for (float q = -range, v = -range; v <= range + sqrt3 * hexSize; v += sqrt3 * (hexSize))
+        for (int q = -range; q <= range; q++)
         {
-            float check = Math.Max(-3f, ((3f / 4f * sqrt3 * (0.7f)) * (-v  - range)));
-            float r1 = (check != -range) ? (3f / 4f * sqrt3 * (0.7f)) * (-v - range) : Math.Max(-2.835f, -v - range);
-            float r2 = Math.Min(range, -v + range);
+            float r1 = Math.Max(-range, -q - range);
+            float r2 = Math.Min(range, -q + range);
 
-            q += (check != -range) ? sqrt3 * (hexSize / 2f) : sqrt3 * (hexSize);
-
-            for (float r = r1, t = q; r <= r2 + 0.165f; r += (3f / 4f) * sqrt3 * 0.7f, t += sqrt3 * (hexSize / 2f))
+            for (float r = r1; r <= r2; r++)
             {
-                results.Add(HexAdd(center, new Hex<float>(t, r)));
+                float t = CalculateDiagonal(q, r);
+                Hex<float> hex = new Hex<float>(t, r);
+                results.Add(HexAdd(center, hex));
             }
         }
 
         return results;
     }
 
-    // Check what the current hex's neightbor`
-    public static Hex<float> HexNeighbor(List<Hex<float>> hexes, Hex<float> currentHex, int direction)
+    private static float CalculateDiagonal(float q, float r)
     {
-        return HexAdd(currentHex, HexDirection(hexes, direction));
-    }
-
-    // Check if both hex is equal
-    public static bool HexEquality(Hex<float> a, Hex<float> b)
-    {
-        return a.Equals(b);
+        return q + (r * 0.52f);
     }
 
     public static Hex<float> HexAdd(Hex<float> a, Hex<float> b)
     {
         return new Hex<float>(a.Q + b.Q, a.R + b.R);
-    }
-
-    public static Hex<float> HexSubtract(Hex<float> a, Hex<float> b)
-    {
-        return new Hex<float>(a.Q - b.Q, a.R - b.R);
-    }
-
-    public static Hex<float> HexMultiply(Hex<float> a, Hex<float> b)
-    {
-        return new Hex<float>(a.Q * b.Q, a.R * b.R);
-    }
-
-    // Returns the distance of hex a and b
-    public static float HexDistance(Hex<float> a, Hex<float> b)
-    {
-        Hex<float> hex = HexSubtract(a, b);
-        return (Math.Abs(hex.Q) + Math.Abs(hex.Q + hex.R) + Math.Abs(hex.R)) / 2;
     }
 }
